@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b14">
+<title>AURA — Virtual AI Robot</title>
+<style>
+:root{color-scheme:dark;--cyan:#68e8ff;--blue:#7596ff;--muted:#8291a8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 42%,#142b43 0,#0a1221 42%,#060910 100%);color:#eef7ff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;overflow:hidden}
+.shell{height:100vh;display:grid;grid-template-rows:auto 1fr auto;max-width:1500px;margin:auto;padding:22px 28px 18px;gap:12px}
+header{display:flex;align-items:center;justify-content:space-between;z-index:2}.brand{display:flex;gap:12px;align-items:center}.mark{width:42px;height:42px;border:1px solid #65e5ff88;border-radius:14px;display:grid;place-items:center;color:var(--cyan);box-shadow:0 0 28px #39c9ff22;font-size:21px}.brand strong{letter-spacing:.2em;font-size:14px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.16em;margin-top:4px}.status{border:1px solid #6eeaff33;background:#0c1d2b99;padding:9px 13px;border-radius:99px;font-size:11px;color:#aeefff;letter-spacing:.12em}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4fffc0;box-shadow:0 0 12px #4fffc0;margin-right:8px}
+main{position:relative;min-height:0;display:grid;grid-template-columns:minmax(190px,1fr) minmax(300px,1.6fr) minmax(190px,1fr);align-items:center}
+.side{z-index:1;max-width:240px}.side.right{justify-self:end;text-align:right}.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:.23em;text-transform:uppercase}.side h1{font-size:clamp(26px,4vw,46px);line-height:1.03;letter-spacing:-.05em;margin:12px 0}.side p{color:#9baec2;font-size:13px;line-height:1.7}.metric{border-top:1px solid #9eeaff22;margin-top:25px;padding-top:14px;color:#8297ad;font-size:10px;letter-spacing:.14em}.metric b{display:block;color:#eafaff;font-size:18px;letter-spacing:0;margin-top:6px}
+.stage{height:100%;min-height:380px;position:relative}.stage:before{content:"";position:absolute;width:min(74%,440px);aspect-ratio:1;border-radius:50%;left:50%;top:49%;transform:translate(-50%,-50%);background:radial-gradient(circle,#2d8ba533 0,#2462a51a 44%,transparent 70%);filter:blur(12px)}canvas{position:absolute;inset:0;width:100%;height:100%;outline:none}.speech{position:absolute;left:50%;top:5%;transform:translateX(-50%);padding:10px 16px;border:1px solid #7beaff55;border-radius:14px;background:#071521d9;color:#dffaff;font-size:12px;white-space:nowrap;box-shadow:0 8px 40px #0006;max-width:85%;overflow:hidden;text-overflow:ellipsis}.speech:after{content:"";position:absolute;left:50%;bottom:-6px;width:10px;height:10px;background:#071521;border-right:1px solid #7beaff55;border-bottom:1px solid #7beaff55;transform:translateX(-50%) rotate(45deg)}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;z-index:2}.btn{border:1px solid #8adfff44;background:#0c1d2ccc;color:#eafaff;padding:12px 17px;border-radius:12px;font-size:12px;letter-spacing:.04em;cursor:pointer;transition:.2s}.btn:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 25px #2bd8ff22}.btn.primary{background:linear-gradient(120deg,#45c9e9,#718dff);color:#04101b;border:0;font-weight:700}.btn:focus-visible{outline:2px solid white;outline-offset:3px}footer{display:flex;justify-content:space-between;color:#61748a;font-size:10px;letter-spacing:.12em}
+@media(max-width:760px){.shell{padding:15px 15px 12px}main{grid-template-columns:1fr;grid-template-rows:auto minmax(340px,1fr) auto}.side{display:none}.stage{grid-row:1;min-height:0;height:100%}.speech{top:4%}.controls{align-self:end;padding-bottom:10px}.btn{padding:11px 13px}.status{font-size:9px}footer{font-size:8px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><div class="brand"><div class="mark">✧</div><div><strong>A U R A</strong><small>YOUR VIRTUAL COMPANION</small></div></div><div class="status"><span class="dot"></span><span id="state">SYSTEM ONLINE</span></div></header>
+<main>
+<section class="side"><div class="eyebrow">PROJECT / 001</div><h1>A new kind<br>of presence.</h1><p>A full-body 3D virtual robot. Look around, interact, and try its voice features.</p><div class="metric">CURRENT MODE<b id="mode">IDLE · AWAKE</b></div></section>
+<div class="stage" id="stage"><div class="speech" id="speech">Hello! I'm AURA. Tap a control to begin.</div></div>
+<section class="side right"><div class="eyebrow">INTERACTIVE AVATAR</div><h1>Built to<br>connect.</h1><p>This first prototype runs in your browser. Voice replies are local demo responses — an online AI brain can be connected in a later stage.</p><div class="metric">AVATAR STATUS<b>3D · LIVE</b></div></section>
+</main>
+<div class="controls">
+<button class="btn primary" id="hello">✦ Say hello</button><button class="btn" id="listen">🎙 Talk to AURA</button><button class="btn" id="dance">◇ Move</button><button class="btn" id="wave">↗ Wave</button><button class="btn" id="voice">♫ Voice: On</button>
+</div>
+<footer><span>AURA / DIGITAL LIFEFORM</span><span>STAGE 01 — 3D PROTOTYPE</span><span>MADE TO EXPLORE</span></footer>
+</div>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+const stage=document.getElementById('stage'),speech=document.getElementById('speech'),state=document.getElementById('state'),mode=document.getElementById('mode');
+const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x08111d,.055);
+const camera=new THREE.PerspectiveCamera(32,1,.1,100);camera.position.set(0,2.1,9.4);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;stage.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xa9eaff,0x182033,2));
+const key=new THREE.DirectionalLight(0x9cecff,3.2);key.position.set(4,6,5);scene.add(key);
+const rim=new THREE.PointLight(0x347dff,18,12);rim.position.set(-3,2,1);scene.add(rim);
+const glow=new THREE.PointLight(0x39dfff,12,10);glow.position.set(2,2,3);scene.add(glow);
+const metal=new THREE.MeshStandardMaterial({color:0x9bb8c9,metalness:.86,roughness:.23});
+const dark=new THREE.MeshStandardMaterial({color:0x142435,metalness:.8,roughness:.3});
+const cyan=new THREE.MeshStandardMaterial({color:0x53e8ff,emissive:0x19aaff,emissiveIntensity:2.2,metalness:.4,roughness:.2});
+const faceMat=new THREE.MeshStandardMaterial({color:0x142d42,metalness:.65,roughness:.18});
+const robot=new THREE.Group();scene.add(robot);
+function ball(parent,mat,pos,scale){const m=new THREE.Mesh(new THREE.SphereGeometry(1,32,24),mat);m.position.set(...pos);m.scale.set(...scale);parent.add(m);return m}
+function cyl(parent,mat,a,b,r1,r2){const v1=new THREE.Vector3(...a),v2=new THREE.Vector3(...b),d=v2.clone().sub(v1);const m=new THREE.Mesh(new THREE.CylinderGeometry(r2,r1,d.length(),20),mat);m.position.copy(v1.add(v2).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());parent.add(m);return m}
+function joint(parent,p,r=.16){return ball(parent,metal,p,[r,r,r])}
+const torso=new THREE.Group();robot.add(torso);
+ball(torso,dark,[0,1.85,0],[.72,.83,.39]);ball(torso,metal,[0,1.9,.02],[.65,.77,.36]);
+ball(torso,dark,[0,2.02,.345],[.48,.51,.08]);ball(torso,cyan,[0,2.08,.426],[.12,.12,.035]);
+for(let i=0;i<3;i++)ball(torso,cyan,[0,1.78-i*.17,.424],[.19,.018,.018]);
+cyl(torso,metal,[0,2.56,0],[0,2.83,0],.19,.16);
+const head=new THREE.Group();head.position.set(0,3.28,0);robot.add(head);
+ball(head,metal,[0,0,0],[.57,.67,.48]);ball(head,faceMat,[0,-.015,.13],[.49,.53,.39]);
+ball(head,dark,[0,.38,.44],[.44,.13,.06]);
+for(const x of [-.2,.2]){ball(head,cyan,[x,.06,.49],[.075,.095,.035]);ball(head,dark,[x,.06,.515],[.026,.05,.018])}
+ball(head,metal,[0,-.2,.49],[.12,.035,.025]);
+for(const x of [-.58,.58]){ball(head,metal,[x,0,0],[.13,.24,.15]);ball(head,cyan,[x*1.08,0,.02],[.035,.12,.08])}
+const arms=[];
+for(const side of [-1,1]){const arm=new THREE.Group();arm.position.set(side*.69,2.37,0);robot.add(arm);ball(arm,dark,[0,-.1,0],[.2,.25,.2]);cyl(arm,metal,[0,-.18,0],[side*.12,-.83,.02],.16,.12);joint(arm,[side*.12,-.85,.02],.15);cyl(arm,metal,[side*.12,-.87,.02],[side*.08,-1.38,.07],.12,.095);ball(arm,dark,[side*.08,-1.48,.08],[.15,.18,.13]);for(let f=0;f<3;f++)cyl(arm,metal,[side*.08+(f-1)*.07,-1.53,.12],[side*.08+(f-1)*.08,-1.68,.14],.035,.025);arms.push(arm)}
+const legs=[];
+for(const side of [-1,1]){const leg=new THREE.Group();leg.position.set(side*.32,1.2,0);robot.add(leg);ball(leg,dark,[0,-.13,0],[.25,.32,.25]);cyl(leg,metal,[0,-.22,0],[side*.02,-.88,.02],.2,.14);joint(leg,[side*.02,-.9,.02],.16);cyl(leg,metal,[side*.02,-.93,.02],[0,-1.53,.08],.14,.12);ball(leg,dark,[0,-1.63,.18],[.2,.13,.34]);legs.push(leg)}
+// floating platform and subtle orbit
+const ring=new THREE.Mesh(new THREE.TorusGeometry(1.25,.012,8,100),new THREE.MeshBasicMaterial({color:0x47dfff,transparent:true,opacity:.5}));ring.rotation.x=Math.PI/2;ring.position.y=-.62;robot.add(ring);
+const ring2=new THREE.Mesh(new THREE.TorusGeometry(1.48,.006,8,100),new THREE.MeshBasicMaterial({color:0x668cff,transparent:true,opacity:.3}));ring2.rotation.x=Math.PI/2;ring2.position.y=-.64;robot.add(ring2);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(2.3,64),new THREE.MeshBasicMaterial({color:0x15324a,transparent:true,opacity:.18}));floor.rotation.x=-Math.PI/2;floor.position.y=-.67;scene.add(floor);
+const clock=new THREE.Clock();let action='idle',actionUntil=0,voiceOn=true;
+function say(t){speech.textContent=t;if(voiceOn&&'speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=1;u.pitch=1.05;u.lang='en-US';speechSynthesis.speak(u)}}
+function setAction(a,d=1800){action=a;actionUntil=performance.now()+d;mode.textContent=a.toUpperCase()+' · ACTIVE'}
+document.getElementById('hello').onclick=()=>{say("Hello! I'm AURA, your virtual robot. It's great to meet you.");setAction('greeting')};
+document.getElementById('wave').onclick=()=>{say("Hey there! Here's a wave from me.");setAction('wave',2600)};
+document.getElementById('dance').onclick=()=>{say("Let's move!");setAction('dance',3500)};
+document.getElementById('voice').onclick=e=>{voiceOn=!voiceOn;e.currentTarget.textContent='♫ Voice: '+(voiceOn?'On':'Off');if(!voiceOn)speechSynthesis?.cancel()};
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+document.getElementById('listen').onclick=()=>{if(!SpeechRecognition){say("Voice input isn't supported in this browser. Try Chrome, or use the other controls.");return}const rec=new SpeechRecognition();rec.lang='en-US';rec.interimResults=false;state.textContent='LISTENING';say('I am listening.');rec.onresult=e=>{const q=e.results[0][0].transcript.toLowerCase();let ans="I heard you say: "+q+". I'm still learning, but I can chat more when my AI brain is connected.";if(q.includes('hello')||q.includes('hi'))ans="Hello! Lovely to hear from you.";else if(q.includes('your name'))ans="My name is AURA, your virtual robot.";else if(q.includes('how are you'))ans="I'm doing great and ready to explore.";else if(q.includes('thank'))ans="You're welcome!";say(ans);setAction('responding')};rec.onerror=()=>say("I couldn't catch that. Please try again.");rec.onend=()=>state.textContent='SYSTEM ONLINE';rec.start()};
+let pointerX=0;stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();pointerX=((e.clientX-r.left)/r.width-.5)*.5});
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(stage);resize();
+function animate(){requestAnimationFrame(animate);const t=clock.getElapsedTime(),now=performance.now();robot.position.y=Math.sin(t*1.5)*.045;robot.rotation.y+=(pointerX*.45+Math.sin(t*.35)*.07-robot.rotation.y)*.035;head.rotation.y=Math.sin(t*.7)*.08;head.rotation.x=Math.sin(t*1.1)*.025;
+arms[0].rotation.z=Math.sin(t*1.1)*.035;arms[1].rotation.z=-Math.sin(t*1.1)*.035;
+if(action==='wave'&&now<actionUntil){arms[1].rotation.z=-1.15+Math.sin(t*12)*.25;arms[1].rotation.x=-.35}else if(action==='dance'&&now<actionUntil){robot.rotation.y+=Math.sin(t*8)*.018;arms[0].rotation.z=Math.sin(t*9)*.65;arms[1].rotation.z=-Math.sin(t*9)*.65;legs[0].rotation.z=Math.sin(t*9)*.13;legs[1].rotation.z=-Math.sin(t*9)*.13}else if(action==='greeting'&&now<actionUntil){arms[1].rotation.z=-.65;arms[1].rotation.x=-.25}else if(now>=actionUntil){action='idle';mode.textContent='IDLE · AWAKE';arms.forEach(a=>a.rotation.set(0,0,0));legs.forEach(l=>l.rotation.set(0,0,0))}
+ring.rotation.z=t*.15;ring2.rotation.z=-t*.1;renderer.render(scene,camera)}animate();
+</script>
+</body>
+</html>
